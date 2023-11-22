@@ -1,0 +1,39 @@
+py job scheduling
+def JOB(jobs, t):
+    max_deadline = max(jobs, key=lambda x: x[1])[1]
+    jobs.sort(key=lambda x: x[2], reverse=True)
+ 
+    sequence = [0] * max_deadline
+    maxProfit = 0
+
+    for i in range(t):
+        if sequence[jobs[i][1] - 1] == 0:
+            maxProfit += jobs[i][2]
+            sequence[jobs[i][1] - 1] = jobs[i][0]
+        else:
+            z = jobs[i][1] - 1
+            while z >= 0:
+                if sequence[z] == 0:
+                    maxProfit += jobs[i][2]
+                    sequence[z] = jobs[i][0]
+                    break
+                else:
+                    z -= 1
+                    
+    sequence = [job for job in sequence if job != 0]
+    return maxProfit, sequence
+
+jobs = []
+n = int(input("Enter no Of Jobs: "))
+for i in range(n):
+    print("Enter details for job", (i + 1))
+    job_id = input("Enter Job Title: ")
+    deadline = int(input("Enter Job Deadline: "))
+    profit = int(input("Enter Job Profit: "))
+    jobs.append([job_id, deadline, profit])
+
+t = len(jobs)
+maxProfit, sequence = JOB(jobs, t)
+
+print("Maximum Profit:", maxProfit)
+print("Sequence:", sequence)

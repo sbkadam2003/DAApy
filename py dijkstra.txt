@@ -1,0 +1,57 @@
+py dijkstra
+def createGraph(N, M):
+    graph = [[float("inf")] * N for _ in range(N)]
+    for i in range(N):
+        graph[i][i] = 0
+    for _ in range(M):
+        print(f"Enter values for Edge {_ + 1}:")
+        u = int(input("Enter start node u: ")) - 1
+        v = int(input("Enter end node v: ")) - 1
+        w = int(input("Enter time taken by signal to travel from u to v (w): "))
+        graph[u][v] = w
+    return graph
+
+def dijkstra(graph, start):
+    N = len(graph)
+    distances = [float("inf")] * N
+    distances[start] = 0
+    visited = set()
+    parents = [-1] * N
+    while len(visited) < N:
+        min_distance, min_node = float("inf"), -1
+        for node in range(N):
+            if node not in visited and distances[node] < min_distance:
+                min_distance, min_node = distances[node], node
+        visited.add(min_node)
+        for neighbor in range(N):
+            if neighbor not in visited and graph[min_node][neighbor] != float("inf"):
+                new_distance = distances[min_node] + graph[min_node][neighbor]
+                if new_distance < distances[neighbor]:
+                    distances[neighbor] = new_distance
+                    parents[neighbor] = min_node
+    return distances, parents
+
+def printPath(start, end, parents, index_to_node):
+    path = []
+    current_vertex = end
+    while current_vertex != start:
+        path.append(current_vertex)
+        current_vertex = parents[current_vertex]
+    path.append(start)
+    path.reverse()
+    return [index_to_node[i] for i in path]
+
+N = int(input("Enter the number of nodes (N):"))
+M = int(input("Enter the number of edges (M): "))
+graph = createGraph(N, M)
+start_vertex = int(input(f"Enter the start Node (1 to {N}): ")) - 1
+shortest_paths, parents = dijkstra(graph, start_vertex)
+index_to_node = [str(i+1) for i in range(N)]  # Assumes nodes are labeled 1 to N.
+for i, distance in enumerate(shortest_paths):
+    if distance == float("inf"):
+        print(f"Signal from node {start_vertex+1} to node {i+1} is not reachable")
+    else:
+        path = printPath(start_vertex, i, parents, index_to_node)
+        print(f"Shortest time taken by signal from node {start_vertex+1} to node {i+1} is {distance}")
+        print(f"Shortest path: {' -> '.join(path)}")
+4

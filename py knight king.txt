@@ -1,0 +1,47 @@
+py knight king
+
+def get_all_positions(chess, x, c, n, count):
+    if x >= n or c >= n or x < 0 or c < 0 or chess[x][c] == 1:
+        return
+    
+    chess[x][c] = 1
+    count[0] += 1
+    for i in range(n):
+        for j in range(n):
+            print(chess[i][j], end=" ")
+        print("")
+    print("")
+
+    get_all_positions(chess, x + 1, c - 2, n, count)
+    get_all_positions(chess, x + 1, c + 2, n, count)
+    get_all_positions(chess, x - 1, c + 2, n, count)
+    get_all_positions(chess, x - 1, c - 2, n, count)
+    get_all_positions(chess, x + 2, c - 1, n, count)
+    get_all_positions(chess, x + 2, c + 1, n, count)
+    get_all_positions(chess, x - 2, c + 1, n, count)
+    get_all_positions(chess, x - 2, c - 1, n, count)
+    return
+
+def main():
+    print("Enter The Value Of N")
+    n = int(input())
+    chess = [[0 for _ in range(n)] for _ in range(n)]
+
+    print("Enter The Starting Position (x,y) :- ")
+    x, y = map(int, input().split())
+    count = [0]
+
+    get_all_positions(chess, x, y, n, count)
+    flag = 0
+    for i in range(n):
+        for j in range(n):
+            if chess[i][j] == 0:
+                print("Not Able to Move to visit all chess cell")
+                flag += 1
+                break
+
+    if flag == 0:
+        print("From Starting Position Knight Can Move to Every Position with number of jumps: ", count[0])
+
+if __name__ == "__main__":
+    main()
